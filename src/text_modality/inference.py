@@ -21,7 +21,7 @@ class TextInference:
 
 if __name__ == '__main__':
     script_dir = os.path.dirname(__file__)
-    config_path = os.path.join(script_dir, "../../checkpoints/text_modality/best_text_model_v2.pth")
+    config_path = os.path.join(script_dir, "../../checkpoints/text_modality/best_text_model_v3.pth")
     text_modality_checkpoint = os.path.abspath(config_path)
     
     glove_path = os.path.join(script_dir, "../../checkpoints/glove.6B/glove.6B.50d.txt")

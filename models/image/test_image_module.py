@@ -12,6 +12,7 @@ import torch
 import torch.nn as nn
 from torchvision import transforms, models
 import matplotlib.pyplot as plt
+import os
 
 
 # Define the transform to match the training preprocessing
@@ -79,30 +80,29 @@ def classify_image(image_path, model, transform, show_image=False):
     
     return predicted_label
 
-# Example usage
-import os
-happy_path = '/home/borhan/Desktop/multimodal_depression_detection/data/images/happy'
-sad_path = '/home/borhan/Desktop/multimodal_depression_detection/data/images/sad'
+if __name__ == '__main__':
+    
+    happy_path = '/home/borhan/Desktop/multimodal_depression_detection/data/images/happy'
+    sad_path = '/home/borhan/Desktop/multimodal_depression_detection/data/images/sad'
 
 
-happy_count = 0
-sad_count = 0
+    happy_count = 0
+    sad_count = 0
 
-# image_root, _, image_paths = os.walk(happy_path)
-for image_path in os.listdir(sad_path):
-    print(100 *'*')
-    # print(image_path)
-    image_path = os.path.join(sad_path, image_path)  # Replace with your image path
-    print(image_path)
-    predicted_label = classify_image(image_path, model, transform)
-    print(f'The image is classified as: {predicted_label}')
-    if predicted_label == 'sad':
-        sad_count += 1
-    else:
-        happy_count += 1
-        
-        
-print(f'Happy count: {happy_count}')
-print(f'Sad count: {sad_count}')
-print(f'Total count: {happy_count + sad_count}')
-print(f'acc: {sad_count / (happy_count + sad_count) * 100}%')
+    for image_path in os.listdir(sad_path):
+        print(100 *'*')
+        # print(image_path)
+        image_path = os.path.join(sad_path, image_path) 
+        print(image_path)
+        predicted_label = classify_image(image_path, model, transform)
+        print(f'The image is classified as: {predicted_label}')
+        if predicted_label == 'sad':
+            sad_count += 1
+        else:
+            happy_count += 1
+            
+            
+    print(f'Happy count: {happy_count}')
+    print(f'Sad count: {sad_count}')
+    print(f'Total count: {happy_count + sad_count}')
+    print(f'acc: {sad_count / (happy_count + sad_count) * 100}%')

@@ -11,6 +11,8 @@ from copy import deepcopy
 import torch
 from tqdm import tqdm
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 def add_to_dict(d, filename):
     with open(filename, 'r') as f:
         for line in f.readlines():
@@ -57,7 +59,7 @@ class SentimentLSTM(nn.Module):
         return x
 
 def load_model(model_path):
-    model = SentimentLSTM()
+    model = SentimentLSTM().to(device)
     model.load_state_dict(torch.load(model_path))
     model.eval()
     return model
@@ -97,7 +99,7 @@ def preprocess_sentence(sentence, word_dict, tokenizer, lemmatizer, max_sequence
         word_vectors = word_vectors[:max_sequence_length]
 
     # Convert to PyTorch tensor
-    return torch.tensor(word_vectors, dtype=torch.float32).unsqueeze(0)  # Add batch dimension
+    return torch.tensor(word_vectors, dtype=torch.float32).unsqueeze(0).to(device)  # Add batch dimension
 
 def predict_sentence_class(sentence, model, word_dict, tokenizer, lemmatizer):
     """
@@ -126,13 +128,13 @@ def split_dataset(df: pd.DataFrame, val_size=0.15, test_size=0.15):
     train_df, val_df, test_df = df[:split_index_1], df[split_index_1:split_index_2], df[split_index_2:]
     return train_df, val_df, test_df
 
-def process_csv(df: pd.DataFrame, word_dict: dict, shuffle=False):
+def process_csv(df: pd.DataFrame, word_dict: dict, batch_size=32, shuffle=False):
     X, y = df_to_X_y(df, word_dict)
     X = pad_X(X)
-    X_tensor = torch.tensor(X, dtype=torch.float32)
-    y_tensor = torch.tensor(y, dtype=torch.float32)
+    X_tensor = torch.tensor(X, dtype=torch.float32).to(device)
+    y_tensor = torch.tensor(y, dtype=torch.float32).to(device)
     dataset = TensorDataset(X_tensor, y_tensor)
-    return DataLoader(dataset, batch_size=32, shuffle=shuffle)
+    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
 
 def init_nltk():
     nltk.download('wordnet')
@@ -147,7 +149,7 @@ def init_vocab(glove_path: str):
     add_to_dict(words, glove_path)
 
 def inference(csv_path: str, model_path: str):
-    model = SentimentLSTM()
+    model = SentimentLSTM().to(device)
     df = pd.read_csv(csv_path)
     model.load_state_dict(torch.load(model_path))
 
@@ -168,7 +170,7 @@ def inference(csv_path: str, model_path: str):
     print(classification_report(y, mine_predictions))
     
 def train_loop(train_loader, val_loader, test_loader, y_test):
-    model = SentimentLSTM()
+    model = SentimentLSTM().to(device)
     criterion = nn.BCELoss()
     optimizer = optim.Adam(model.parameters(), lr=0.0001)
 
@@ -239,7 +241,7 @@ def train_loop(train_loader, val_loader, test_loader, y_test):
         # Check for improvement and save model
         if val_loss < best_val_loss:
             best_val_loss = val_loss
-            torch.save(model.state_dict(), 'best_text_model_v2.pth')
+            torch.save(model.state_dict(), 'best_text_model_v4.pth')
 
         # Print epoch summary
         print(f'Epoch {epoch + 1}/{num_epochs}: '
@@ -270,9 +272,9 @@ def create_train_data_loader(csv_path: str):
     
     X_test, y_test = df_to_X_y(test_df, words)
     
-    train_loader = process_csv(train_df, words)
-    val_loader = process_csv(val_df, words)
-    test_loader = process_csv(test_df, words)
+    train_loader = process_csv(train_df, words, batch_size=32)
+    val_loader = process_csv(val_df, words,batch_size=32)
+    test_loader = process_csv(test_df, words,batch_size=32)
     
     return train_loader, val_loader, test_loader, X_test, y_test
     

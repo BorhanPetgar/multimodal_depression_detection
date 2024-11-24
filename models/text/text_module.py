@@ -282,11 +282,19 @@ def train_model(csv_path: str):
     
     train_loop(train_loader, val_loader, test_loader, y_test)
     
-def run_train():
-    pass
+def run_train(glove_path: str, csv_path: str):
+    init_nltk()
+    init_vocab(glove_path)
+    
+    print('Training model...')
+    train_model(csv_path)
 
-def run_inference():
-    pass
+def run_inference(csv_path: str, model_path: str, glove_path):
+    init_nltk()
+    init_vocab(glove_path)
+    print('Running inference...')
+    inference(csv_path, model_path)
+
 
 if __name__ == "__main__":
     

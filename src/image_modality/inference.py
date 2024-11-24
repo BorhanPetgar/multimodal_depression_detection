@@ -13,8 +13,8 @@ class ImageInference:
         self.transform = transform
 
     def inference_image(self, image_path: str):
-        predicted_label, confidence = classify_image(image_path, self.model, self.transform)
-        return predicted_label, confidence
+        predicted_label, confidence, prediction = classify_image(image_path, self.model, self.transform)
+        return predicted_label, confidence, prediction
     
     
 if __name__ == '__main__':
@@ -24,5 +24,5 @@ if __name__ == '__main__':
     image_inference = ImageInference(image_modality_checkpoint, transform)
     image_path = os.path.join(script_dir, "../../data/images/happy/h_7.jpg")
     image_path = os.path.abspath(image_path)
-    predicted_label, confidence = image_inference.inference_image(image_path)
-    print(predicted_label, confidence)
+    predicted_label, confidence, prediction = image_inference.inference_image(image_path)
+    print(predicted_label, confidence, prediction)

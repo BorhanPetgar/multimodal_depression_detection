@@ -68,17 +68,19 @@ def classify_image(image_path, model, transform, show_image=False):
     with torch.no_grad():
         prediction = model(image_tensor)
     
-    # Convert prediction to binary label
-    predicted_label = 'sad' if prediction.item() > 0.5 else 'happy'
+    # Convert prediction to binary label and confidence
+    confidence = prediction.item()
+    predicted_label = 'sad' if confidence > 0.5 else 'happy'
+    confidence = confidence if predicted_label == 'sad' else 1 - confidence
     
     # Display the image and prediction
     if show_image:
         plt.imshow(image)
-        plt.title(f'Prediction: {predicted_label} Confidence: {prediction.item():.2f}')
+        plt.title(f'Prediction: {predicted_label}, Confidence: {confidence:.2f}')
         plt.axis('off')
         plt.show()
     
-    return predicted_label
+    return predicted_label, confidence, prediction
 
 if __name__ == '__main__':
     
@@ -94,8 +96,8 @@ if __name__ == '__main__':
         # print(image_path)
         image_path = os.path.join(sad_path, image_path) 
         print(image_path)
-        predicted_label = classify_image(image_path, model, transform)
-        print(f'The image is classified as: {predicted_label}')
+        predicted_label, confidence, prediction = classify_image(image_path, model, transform)
+        print(f'The image is classified as: {predicted_label}, Confidence: {confidence}')
         if predicted_label == 'sad':
             sad_count += 1
         else:

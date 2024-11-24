@@ -1,17 +1,17 @@
+"""
+This script demonstrates how to use the trained image classification model to classify a single image.
+It also provides an example of how to use the model to classify multiple images and calculate the accuracy.
+It gets the images from the data/images/happy and data/images/sad directories.
+"""
+
 import torch
 from torchvision import transforms
 from PIL import Image
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
-import torch.optim as optim
-from torch.utils.data import DataLoader, random_split
-from torchvision import datasets, transforms, models
-from sklearn.metrics import classification_report, confusion_matrix
+from torchvision import transforms, models
 import matplotlib.pyplot as plt
-import seaborn as sns
-from tqdm import tqdm
-import numpy as np
 
 
 # Define the transform to match the training preprocessing
@@ -21,7 +21,7 @@ transform = transforms.Compose([
     transforms.Normalize((0.5,), (0.5,))
 ])
 
-def load_model(model_path='/home/fteam5/borhan/nlp/project/best_image_model.pth'):
+def load_model(model_path='/home/borhan/Desktop/multimodal_depression_detection/checkpoints/image_modality/best_image_model.pth'):
     """
     Load the pre-trained model.
     """
@@ -50,7 +50,7 @@ def load_model(model_path='/home/fteam5/borhan/nlp/project/best_image_model.pth'
 # Load the trained model
 model = load_model()
 
-def classify_image(image_path, model, transform):
+def classify_image(image_path, model, transform, show_image=False):
     """
     Classifies a single image as 'happy' or 'sad'.
     """
@@ -71,17 +71,18 @@ def classify_image(image_path, model, transform):
     predicted_label = 'sad' if prediction.item() > 0.5 else 'happy'
     
     # Display the image and prediction
-    plt.imshow(image)
-    plt.title(f'Prediction: {predicted_label}')
-    plt.axis('off')
-    plt.show()
+    if show_image:
+        plt.imshow(image)
+        plt.title(f'Prediction: {predicted_label} Confidence: {prediction.item():.2f}')
+        plt.axis('off')
+        plt.show()
     
     return predicted_label
 
 # Example usage
 import os
-happy_path = '/home/fteam5/borhan/nlp/project/data/images/happy'
-sad_path = '/home/fteam5/borhan/nlp/project/data/images/sad'
+happy_path = '/home/borhan/Desktop/multimodal_depression_detection/data/images/happy'
+sad_path = '/home/borhan/Desktop/multimodal_depression_detection/data/images/sad'
 
 
 happy_count = 0
@@ -96,10 +97,12 @@ for image_path in os.listdir(sad_path):
     predicted_label = classify_image(image_path, model, transform)
     print(f'The image is classified as: {predicted_label}')
     if predicted_label == 'sad':
-        happy_count += 1
-    else:
         sad_count += 1
+    else:
+        happy_count += 1
+        
+        
 print(f'Happy count: {happy_count}')
 print(f'Sad count: {sad_count}')
 print(f'Total count: {happy_count + sad_count}')
-print(f'acc: {happy_count / (happy_count + sad_count) * 100}%')
+print(f'acc: {sad_count / (happy_count + sad_count) * 100}%')

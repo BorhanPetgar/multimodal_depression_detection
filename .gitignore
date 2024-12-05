@@ -2,3 +2,4 @@ data
 **/*.csv
 checkpoints/glove.6B
 checkpoints/glove.6B.zip
+temp.py

@@ -7,7 +7,7 @@ import torchvision
 
 
 class ImageInference:
-    def __init__(self, model_path: str, transform: torchvision.transforms.Compose):
+    def __init__(self, model_path: str):
         self.model_path = model_path
         self.model = load_model(self.model_path)
         self.transform = transform

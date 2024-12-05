@@ -21,7 +21,7 @@ if __name__ == '__main__':
     script_dir = os.path.dirname(__file__)
     config_path = os.path.join(script_dir, "../../checkpoints/image_modality/best_image_model.pth")
     image_modality_checkpoint = os.path.abspath(config_path)
-    image_inference = ImageInference(image_modality_checkpoint, transform)
+    image_inference = ImageInference(image_modality_checkpoint)
     image_path = os.path.join(script_dir, "../../data/images/happy/h_7.jpg")
     image_path = os.path.abspath(image_path)
     predicted_label, confidence, prediction = image_inference.inference_image(image_path)

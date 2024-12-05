@@ -28,5 +28,6 @@ if __name__ == '__main__':
     glove_path = os.path.abspath(glove_path)
     
     text_inference = TextInference(text_modality_checkpoint, glove_path)
-    text = '/home/borhan/Desktop/multimodal_depression_detection/models/text/my_examples.csv'
+    # text = '/home/borhan/Desktop/multimodal_depression_detection/models/text/my_examples.csv'
+    text = '/home/borhan/Desktop/multimodal_depression_detection/data/texts/multimodal/text.csv'
     text_inference.inference_text(text)

@@ -164,9 +164,9 @@ def inference(csv_path: str, model_path: str):
         for X_batch, _ in loader:
             outputs = model(X_batch)
             preds = (outputs.squeeze() > 0.5).int()
-            print(preds)
+            print(preds, outputs.squeeze())
             mine_predictions.extend(preds.cpu().numpy())
-            
+
     print(classification_report(y, mine_predictions))
     
 def train_loop(train_loader, val_loader, test_loader, y_test):

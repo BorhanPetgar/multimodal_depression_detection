@@ -1,0 +1,19 @@
+Text modality:
+
+              precision    recall  f1-score   support
+
+           0       0.88      0.82      0.85       446
+           1       0.87      0.92      0.89       582
+
+    accuracy                           0.88      1028
+   macro avg       0.88      0.87      0.87      1028
+weighted avg       0.88      0.88      0.87      1028 
+
+Image modality:
+acc: 0.953307392996109
+
+
+hyperparameter tuning:
+Best weight for text_prob: 0.412
+Best weight for image_prob: 0.588
+Best accuracy: 0.9737354085603

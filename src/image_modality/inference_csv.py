@@ -1,5 +1,7 @@
 import sys
 import os
+from tqdm import tqdm
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
 from src.image_modality.inference import ImageInference
@@ -26,20 +28,28 @@ if __name__ == '__main__':
     df = pd.read_csv(csv_path)
     image_series = df['image']
     
+    corrects = 0
+    total = 0
 
-    for image_path in image_series:
+    for image_path in tqdm(image_series):
         if image_path.startswith('h'):
             image_abs_path = os.path.join(happy_dir, image_path)
-            print(image_abs_path)
+            ground_truth = 'happy'
+            # print(image_abs_path)
         elif image_path.startswith('s'):
             image_abs_path = os.path.join(sad_dir, image_path)
-
+            ground_truth = 'sad'
         predicted_label, confidence, prediction = image_inference.inference_image(image_abs_path)
 
+        if predicted_label == ground_truth:
+            corrects += 1
+            
         prob_list.append(prediction.cpu().numpy())
+        total += 1
         
+    accuracy = corrects / total
     
     column_of_probs = pd.DataFrame({'prob': prob_list})
     column_of_probs.to_csv(path_or_buf='/home/borhan/Desktop/multimodal_depression_detection/data/texts/multimodal/probs/image_prob_list.csv', index=False, columns=['prob'])
-
+    print(accuracy)
     

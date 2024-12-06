@@ -153,6 +153,7 @@ def inference(csv_path: str, model_path: str):
     df = pd.read_csv(csv_path)
     model.load_state_dict(torch.load(model_path))
 
+    dep_probs_list = []
     # Evaluate on test set
     model.eval()
     
@@ -165,9 +166,13 @@ def inference(csv_path: str, model_path: str):
             outputs = model(X_batch)
             preds = (outputs.squeeze() > 0.5).int()
             print(preds, outputs.squeeze())
+            # add the outputs to the dep_list
+            print(outputs.squeeze())
+            dep_probs_list.append(outputs.squeeze())
             mine_predictions.extend(preds.cpu().numpy())
 
     print(classification_report(y, mine_predictions))
+    return dep_probs_list
     
 def train_loop(train_loader, val_loader, test_loader, y_test):
     model = SentimentLSTM().to(device)
@@ -295,8 +300,8 @@ def run_inference(csv_path: str, model_path: str, glove_path):
     init_nltk()
     init_vocab(glove_path)
     print('Running inference...')
-    inference(csv_path, model_path)
-
+    dep_prob_list = inference(csv_path, model_path)
+    return dep_prob_list
 
 if __name__ == "__main__":
     

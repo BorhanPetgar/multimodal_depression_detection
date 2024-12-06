@@ -80,7 +80,8 @@ def classify_image(image_path, model, transform, show_image=False):
         plt.axis('off')
         plt.show()
     
-    return predicted_label, confidence, prediction
+    dep_prob = prediction
+    return predicted_label, confidence, dep_prob
 
 if __name__ == '__main__':
     

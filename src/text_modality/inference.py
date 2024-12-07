@@ -30,7 +30,8 @@ if __name__ == '__main__':
     
     text_inference = TextInference(text_modality_checkpoint, glove_path)
     # text = '/home/borhan/Desktop/multimodal_depression_detection/models/text/my_examples.csv'
-    text = '/home/borhan/Desktop/multimodal_depression_detection/data/texts/multimodal/text.csv'
+    # text = '/home/borhan/Desktop/multimodal_depression_detection/data/texts/multimodal/text.csv'
+    text = '/home/borhan/Desktop/multimodal_depression_detection/data/test/text/text_only.csv'
     dep_prob_list = text_inference.inference_text(text)
     print(20 * '*')
     
@@ -41,4 +42,4 @@ if __name__ == '__main__':
     
     
     column_of_probs = pd.DataFrame({'prob': list_of_probs})
-    column_of_probs.to_csv(path_or_buf='/home/borhan/Desktop/multimodal_depression_detection/data/texts/multimodal/probs/dep_prob_list.csv', index=False, columns=['prob'])
+    column_of_probs.to_csv(path_or_buf='/home/borhan/Desktop/multimodal_depression_detection/data/test/text/test_text_prob_list.csv', index=False, columns=['prob'])

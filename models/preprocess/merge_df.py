@@ -10,10 +10,13 @@ def merge(csv1, csv2, multimodal_pair):
 
     merged_df.columns = ['text_prob', 'image_prob', 'label']
 
-    merged_df.to_csv('/home/borhan/Desktop/multimodal_depression_detection/data/texts/multimodal/probs/text_image_prob_merged.csv', index=False)
+    merged_df.to_csv('/home/borhan/Desktop/multimodal_depression_detection/data/test/text/text_image_prob_merged.csv', index=False)
     
 if __name__ == '__main__':
-    text_csv = '/home/borhan/Desktop/multimodal_depression_detection/data/texts/multimodal/probs/dep_prob_list.csv'
-    image_csv = '/home/borhan/Desktop/multimodal_depression_detection/data/texts/multimodal/probs/image_prob_list.csv'
-    multimodal_pair = '/home/borhan/Desktop/multimodal_depression_detection/data/texts/balanced_data3.csv'
+    # text_csv = '/home/borhan/Desktop/multimodal_depression_detection/data/texts/multimodal/probs/dep_prob_list.csv'
+    # image_csv = '/home/borhan/Desktop/multimodal_depression_detection/data/texts/multimodal/probs/image_prob_list.csv'
+    # multimodal_pair = '/home/borhan/Desktop/multimodal_depression_detection/data/texts/balanced_data3.csv'
+    text_csv = '/home/borhan/Desktop/multimodal_depression_detection/data/test/text/test_text_prob_list.csv'
+    image_csv = '/home/borhan/Desktop/multimodal_depression_detection/data/test/text/test_image_prob_list.csv'
+    multimodal_pair = '/home/borhan/Desktop/multimodal_depression_detection/data/test/text/text.csv'
     merge(text_csv, image_csv, multimodal_pair)
